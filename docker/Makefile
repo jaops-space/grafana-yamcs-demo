@@ -15,14 +15,18 @@ define print_message
 	@printf "\033[$(1)m$(2)\033[0m\n"
 endef
 
-.PHONY: all all-10hz clean yamcs-up yamcs-down yamcs-simulator yamcs-simulator-10hz yamcs-shell help
+.PHONY: all demo-up demo-down yamcs-up yamcs-down yamcs-simulator yamcs-simulator-10hz yamcs-shell help
 
-all: clean yamcs-up yamcs-simulator ## run all: clean, yamcs-up (yamcs-down) and yamcs-simulator
+all: demo-up ## run the full Yamcs + simulator demo
 
-all-10hz: clean yamcs-up yamcs-simulator-10hz ## run all: clean, yamcs-up (yamcs-down) and yamcs-simulator
+demo-up: ## bring up Yamcs and simulator
+	docker compose up -d --build
+
+demo-down: ## bring down Yamcs and simulator
+	docker compose down -v --remove-orphans
 
 yamcs-up: | yamcs-down ## bring up yamcs system
-	docker compose up -d
+	docker compose up -d --build yamcs
 
 yamcs-down: ## bring down yamcs system
 	$(call print_message,33,Stopping any running docker-yamcs containers...)
@@ -30,11 +34,11 @@ yamcs-down: ## bring down yamcs system
 
 yamcs-simulator: ## run yamcs simulator
 	$(call print_message,36,Connect via http://localhost:8090/ system may take about 50 seconds to startup)
-	cd .. && $(PYTHON) ./simulator.py
+	cd .. && $(PYTHON) ./simulator.py --yamcs_instance demo
 
 yamcs-simulator-10hz: ## run yamcs simulator at 10hz
 	$(call print_message,36,Connect via http://localhost:8090/ system may take about 50 seconds to startup)
-	cd .. && $(PYTHON) ./simulator.py --rate=10
+	cd .. && $(PYTHON) ./simulator.py --rate=10 --yamcs_instance demo
 
 yamcs-simulator-down: ## stop the yamcs simulator
 	$(call print_message,33,Stopping the yamcs simulator...)

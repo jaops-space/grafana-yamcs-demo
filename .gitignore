@@ -11,3 +11,6 @@
 
 # Docker logs for CI
 docker/all.log
+
+# Generated demo camera frames
+simulator/images/generated/

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem name="features" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"
+	shortDescription="Grafana/Yamcs feature coverage parameters">
+	<LongDescription>
+		Local software parameters used by the Grafana plugin demo and integration tests.
+		They intentionally cover scalar, enum, string, boolean, aggregate, array,
+		array-of-aggregate, aggregate-of-array, nested aggregate, units, and alarms.
+	</LongDescription>
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<IntegerParameterType name="UInt8Type" signed="false">
+				<IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+			</IntegerParameterType>
+			<IntegerParameterType name="UInt16Type" signed="false">
+				<IntegerDataEncoding sizeInBits="16" encoding="unsigned" />
+			</IntegerParameterType>
+			<IntegerParameterType name="CounterType" signed="false">
+				<UnitSet><Unit>count</Unit></UnitSet>
+				<IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+			</IntegerParameterType>
+			<FloatParameterType name="VoltageType" sizeInBits="32">
+				<UnitSet><Unit>V</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<DefaultAlarm minViolations="2">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="27.2" maxInclusive="34.0" />
+						<CriticalRange minInclusive="25.6" maxInclusive="34.4" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="CurrentType" sizeInBits="32">
+				<UnitSet><Unit>A</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<DefaultAlarm minViolations="2">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="-4" maxInclusive="20" />
+						<CriticalRange minInclusive="-8" maxInclusive="28" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="TemperatureType" sizeInBits="32">
+				<UnitSet><Unit>°C</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<DefaultAlarm minViolations="2">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="-10" maxInclusive="55" />
+						<CriticalRange minInclusive="-20" maxInclusive="70" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="PercentType" sizeInBits="32">
+				<UnitSet><Unit>%</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<ValidRange minInclusive="0" maxInclusive="100" />
+				<DefaultAlarm minViolations="2">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="25" maxInclusive="100" />
+						<CriticalRange minInclusive="15" maxInclusive="100" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="LengthType" sizeInBits="32">
+				<UnitSet><Unit>m</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+			</FloatParameterType>
+			<FloatParameterType name="SpeedType" sizeInBits="32">
+				<UnitSet><Unit>m/s</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+			</FloatParameterType>
+			<FloatParameterType name="AngleType" sizeInBits="32">
+				<UnitSet><Unit>deg</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+			</FloatParameterType>
+			<BooleanParameterType name="EnabledType" zeroStringValue="DISABLED" oneStringValue="ENABLED">
+				<IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+			</BooleanParameterType>
+			<BooleanParameterType name="HealthyType" zeroStringValue="NO" oneStringValue="YES">
+				<IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+			</BooleanParameterType>
+			<StringParameterType name="StringType" />
+			<EnumeratedParameterType name="ModeType">
+				<IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+				<EnumerationList>
+					<Enumeration value="0" label="BOOT" />
+					<Enumeration value="1" label="SAFE" />
+					<Enumeration value="2" label="NOMINAL" />
+					<Enumeration value="3" label="PAYLOAD" />
+					<Enumeration value="4" label="DOWNLINK" />
+					<Enumeration value="5" label="FAULT" />
+				</EnumerationList>
+				<DefaultAlarm minViolations="1">
+					<EnumerationAlarmList>
+						<EnumerationAlarm enumerationLabel="FAULT" alarmLevel="critical" />
+					</EnumerationAlarmList>
+				</DefaultAlarm>
+			</EnumeratedParameterType>
+			<ArrayParameterType name="CellVoltageArrayType" arrayTypeRef="VoltageType">
+				<DimensionList>
+					<Dimension><StartingIndex><FixedValue>0</FixedValue></StartingIndex><EndingIndex><FixedValue>7</FixedValue></EndingIndex></Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<ArrayParameterType name="TemperatureArrayType" arrayTypeRef="TemperatureType">
+				<DimensionList>
+					<Dimension><StartingIndex><FixedValue>0</FixedValue></StartingIndex><EndingIndex><FixedValue>3</FixedValue></EndingIndex></Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<ArrayParameterType name="PowerMatrixType" arrayTypeRef="CurrentType">
+				<DimensionList>
+					<Dimension><StartingIndex><FixedValue>0</FixedValue></StartingIndex><EndingIndex><FixedValue>1</FixedValue></EndingIndex></Dimension>
+					<Dimension><StartingIndex><FixedValue>0</FixedValue></StartingIndex><EndingIndex><FixedValue>3</FixedValue></EndingIndex></Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<AggregateParameterType name="Vector3Type">
+				<MemberList>
+					<Member name="x" typeRef="LengthType" />
+					<Member name="y" typeRef="LengthType" />
+					<Member name="z" typeRef="LengthType" />
+				</MemberList>
+			</AggregateParameterType>
+			<AggregateParameterType name="AttitudeType">
+				<MemberList>
+					<Member name="roll" typeRef="AngleType" />
+					<Member name="pitch" typeRef="AngleType" />
+					<Member name="yaw" typeRef="AngleType" />
+				</MemberList>
+			</AggregateParameterType>
+			<AggregateParameterType name="PowerChannelType">
+				<MemberList>
+					<Member name="voltage" typeRef="VoltageType" />
+					<Member name="current" typeRef="CurrentType" />
+					<Member name="temperature" typeRef="TemperatureType" />
+					<Member name="enabled" typeRef="EnabledType" />
+					<Member name="healthy" typeRef="HealthyType" />
+				</MemberList>
+			</AggregateParameterType>
+			<ArrayParameterType name="PowerChannelArrayType" arrayTypeRef="PowerChannelType">
+				<DimensionList>
+					<Dimension><StartingIndex><FixedValue>0</FixedValue></StartingIndex><EndingIndex><FixedValue>3</FixedValue></EndingIndex></Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<AggregateParameterType name="BatteryPackType">
+				<MemberList>
+					<Member name="stateOfCharge" typeRef="PercentType" />
+					<Member name="cells" typeRef="CellVoltageArrayType" />
+					<Member name="temperatures" typeRef="TemperatureArrayType" />
+				</MemberList>
+			</AggregateParameterType>
+			<AggregateParameterType name="SpacecraftFeatureBundleType">
+				<MemberList>
+					<Member name="mode" typeRef="ModeType" />
+					<Member name="position" typeRef="Vector3Type" />
+					<Member name="attitude" typeRef="AttitudeType" />
+					<Member name="battery" typeRef="BatteryPackType" />
+					<Member name="powerChannels" typeRef="PowerChannelArrayType" />
+				</MemberList>
+			</AggregateParameterType>
+		</ParameterTypeSet>
+		<ParameterSet>
+			<Parameter name="DemoCounter" parameterTypeRef="CounterType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoMode" parameterTypeRef="ModeType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoMessage" parameterTypeRef="StringType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoEnabled" parameterTypeRef="EnabledType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoVoltage" parameterTypeRef="VoltageType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoCurrent" parameterTypeRef="CurrentType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoTemperature" parameterTypeRef="TemperatureType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoCellVoltages" parameterTypeRef="CellVoltageArrayType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoPowerMatrix" parameterTypeRef="PowerMatrixType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoPowerChannels" parameterTypeRef="PowerChannelArrayType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+			<Parameter name="DemoBundle" parameterTypeRef="SpacecraftFeatureBundleType">
+				<ParameterProperties dataSource="local" />
+			</Parameter>
+		</ParameterSet>
+	</TelemetryMetaData>
+</SpaceSystem>

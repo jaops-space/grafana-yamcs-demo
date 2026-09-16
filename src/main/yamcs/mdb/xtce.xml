@@ -60,6 +60,34 @@
 				<UnitSet />
 				<FloatDataEncoding sizeInBits="32" />
 			</FloatParameterType>
+			<FloatParameterType name="BatteryVoltageType" sizeInBits="32">
+				<UnitSet><Unit description="Electrical potential">V</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<DefaultAlarm minViolations="3">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="27.2" maxInclusive="34.0" />
+						<CriticalRange minInclusive="25.6" maxInclusive="34.4" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="BatteryTemperatureType" sizeInBits="32">
+				<UnitSet><Unit>°C</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+				<DefaultAlarm minViolations="3">
+					<StaticAlarmRanges>
+						<WarningRange minInclusive="-10" maxInclusive="55" />
+						<CriticalRange minInclusive="-20" maxInclusive="70" />
+					</StaticAlarmRanges>
+				</DefaultAlarm>
+			</FloatParameterType>
+			<FloatParameterType name="AltitudeType" sizeInBits="32">
+				<UnitSet><Unit>m</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+			</FloatParameterType>
+			<FloatParameterType name="AngleType" sizeInBits="32">
+				<UnitSet><Unit>deg</Unit></UnitSet>
+				<FloatDataEncoding sizeInBits="32" />
+			</FloatParameterType>
 			<BooleanParameterType name="bool_t">
 				<UnitSet />
 				<IntegerDataEncoding sizeInBits="8" />
@@ -94,15 +122,15 @@
 			<Parameter name="OrbitNumberCumulative" parameterTypeRef="uint32_t" />
 			<Parameter name="ElapsedSeconds" parameterTypeRef="uint32_t" />
 			<Parameter name="A" parameterTypeRef="float_t" />
-			<Parameter name="Height" parameterTypeRef="float_t" />
+			<Parameter name="Height" parameterTypeRef="AltitudeType" />
 			<Parameter name="Position" parameterTypeRef="vec3_t" />
 			<Parameter name="Velocity" parameterTypeRef="vec3_t" />
-			<Parameter name="Latitude" parameterTypeRef="float_t" />
-			<Parameter name="Longitude" parameterTypeRef="float_t" />
-			<Parameter name="Battery1_Voltage" parameterTypeRef="float_t" />
-			<Parameter name="Battery2_Voltage" parameterTypeRef="float_t" />
-			<Parameter name="Battery1_Temp" parameterTypeRef="float_t" />
-			<Parameter name="Battery2_Temp" parameterTypeRef="float_t" />
+			<Parameter name="Latitude" parameterTypeRef="AngleType" />
+			<Parameter name="Longitude" parameterTypeRef="AngleType" />
+			<Parameter name="Battery1_Voltage" parameterTypeRef="BatteryVoltageType" />
+			<Parameter name="Battery2_Voltage" parameterTypeRef="BatteryVoltageType" />
+			<Parameter name="Battery1_Temp" parameterTypeRef="BatteryTemperatureType" />
+			<Parameter name="Battery2_Temp" parameterTypeRef="BatteryTemperatureType" />
 			<Parameter name="Magnetometer" parameterTypeRef="vec3_t" />
 			<Parameter name="Sunsensor" parameterTypeRef="float_t" />
 			<Parameter name="Sunsensor_Beta" parameterTypeRef="float_t">
@@ -267,6 +295,22 @@
 					<ValidRange minInclusive="1" maxInclusive="3" />
 				</ValidRangeSet>
 			</IntegerArgumentType>
+			<FloatArgumentType name="PayloadGain_Type">
+				<UnitSet />
+				<FloatDataEncoding sizeInBits="32" />
+				<ValidRangeSet>
+					<ValidRange minInclusive="0" maxInclusive="10" />
+				</ValidRangeSet>
+			</FloatArgumentType>
+			<EnumeratedArgumentType name="PayloadMode_Type">
+				<IntegerDataEncoding sizeInBits="8" />
+				<EnumerationList>
+					<Enumeration value="0" label="STANDBY" />
+					<Enumeration value="1" label="IMAGING" />
+					<Enumeration value="2" label="CALIBRATION" />
+					<Enumeration value="3" label="DOWNLINK" />
+				</EnumerationList>
+			</EnumeratedArgumentType>
 		</ArgumentTypeSet>
 		<MetaCommandSet>
 			<MetaCommand name="CCSDSPacket" abstract="true">
@@ -354,6 +398,35 @@
 					</EntryList>
 					<BaseContainer containerRef="MyProjectPacket" />
 				</CommandContainer>
+			</MetaCommand>
+			<MetaCommand name="ConfigurePayload" shortDescription="Configures the simulated spacecraft payload">
+				<BaseMetaCommand metaCommandRef="MyProjectPacket">
+					<ArgumentAssignmentList>
+						<ArgumentAssignment argumentName="Packet_ID" argumentValue="4" />
+					</ArgumentAssignmentList>
+				</BaseMetaCommand>
+				<ArgumentList>
+					<Argument argumentTypeRef="PayloadMode_Type" name="Mode" shortDescription="Payload operating mode" />
+					<Argument argumentTypeRef="PayloadGain_Type" name="Gain" shortDescription="Payload processing gain" />
+				</ArgumentList>
+				<CommandContainer name="ConfigurePayload">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="Mode" />
+						<ArgumentRefEntry argumentRef="Gain" />
+					</EntryList>
+					<BaseContainer containerRef="MyProjectPacket" />
+				</CommandContainer>
+				<TransmissionConstraintList>
+					<TransmissionConstraint timeOut="PT5S">
+						<Comparison parameterRef="Payload_Status" value="True" />
+					</TransmissionConstraint>
+				</TransmissionConstraintList>
+				<VerifierSet>
+					<CompleteVerifier>
+						<Comparison parameterRef="Payload_Status" value="True" />
+						<CheckWindow timeToStopChecking="PT5S" />
+					</CompleteVerifier>
+				</VerifierSet>
 			</MetaCommand>
 		</MetaCommandSet>
 	</CommandMetaData>

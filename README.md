@@ -1,21 +1,64 @@
-# Yamcs QuickStart
+# Grafana Yamcs Demo
 
-This repository holds the source code to start a basic Yamcs application that monitors a simulated spacecraft in low earth orbit.
+This repository holds a Yamcs demo application for the JAOPS Grafana Yamcs plugin.
 
-You may find it useful as a starting point for your own project.
+It is based on the Yamcs quickstart spacecraft simulation, but extended for Grafana integration testing and demos:
+
+* realtime and historical CCSDS telemetry
+* units, thresholds and parameter alarms
+* scalar, enum, boolean, string, aggregate and array parameter types
+* arrays of aggregates, aggregates of arrays and nested aggregates
+* local image URL telemetry for image-panel demos
+* Yamcs events
+* richer command metadata with arguments, constraints and verifiers
 
 
 ## Prerequisites
 
+For the easiest setup:
+
+* Docker
+* Docker Compose
+
+For native development:
+
 * Java 17+
+* Python 3.10+
 * Linux x64/aarch64, macOS x64/aarch64, or Windows x64
 
-A copy of Maven is also required, however this gets automatically downloaded an installed by using the `./mvnw` shell script as detailed below.
+
+## Run the demo
+
+Start Yamcs and the simulator:
+
+    cd docker
+    docker compose up --build
+
+Open Yamcs at:
+
+    http://localhost:8090
+
+The simulator sends CCSDS packets to Yamcs, publishes local feature/image parameters, and creates demo events.
+
+Generated image frames are served at:
+
+    http://localhost:8091
 
 
-## Running Yamcs
+## Instance and MDB
 
-Here are some commands to get things started:
+The Yamcs instance is named:
+
+    demo
+
+The loaded space systems are:
+
+* `/myproject` - the original spacecraft quickstart telemetry and commands
+* `/features` - local parameters covering Grafana/Yamcs integration-test edge cases
+* `/images` - local parameters for generated demo image URLs
+
+
+## Native development
 
 Compile this project:
 
@@ -23,33 +66,15 @@ Compile this project:
 
 Start Yamcs on localhost:
 
-    ./mvnw yamcs:run
+    ./mvnw org.yamcs:yamcs-maven-plugin:1.3.5:run
 
-Same as yamcs:run, but allows a debugger to attach at port 7896:
-
-    ./mvnw yamcs:debug
-    
-Delete all generated outputs and start over:
-
-    ./mvnw clean
-
-This will also delete Yamcs data. Change the `dataDir` property in `yamcs.yaml` to another location on your file system if you don't want that.
-
-
-## Telemetry
-
-To start pushing CCSDS packets into Yamcs, run the included Python script:
+Start the simulator:
 
     python simulator.py
 
-This script will send packets at 1 Hz over UDP to Yamcs. There is enough test data to run for a full calendar day.
+The simulator sends packets at 1 Hz over UDP to Yamcs. There is enough test data to run for a full calendar day.
 
-The packets are a bit artificial and include a mixture of HK and accessory data.
-
-
-## Telecommanding
-
-This project defines a few example CCSDS telecommands. They are sent to UDP port 10025. The simulator.py script listens to this port. Commands  have no side effects. The script will only count them.
+This project defines example CCSDS telecommands. They are sent to UDP port 10025. The simulator listens to this port and counts received commands.
 
 
 ## Bundling

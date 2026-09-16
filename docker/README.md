@@ -1,6 +1,6 @@
-# Yamcs QuickStart's Docker and Makefile
+# Grafana Yamcs Demo Docker setup
 
-This folder contains content to run yamcs in a docker container
+This folder runs Yamcs and the demo simulator in Docker.
 
 ## Prerequisites
 
@@ -8,30 +8,20 @@ This folder contains content to run yamcs in a docker container
 * docker
 * docker-compose
 
-## Builing, running, and simulating data in Yamcs
+## Running
 
-Here are some commands to get things started:
+Start everything:
 
-To list available make targets:
+    docker compose up --build
 
-    make
+or with Make:
 
-To run the all target:
+    make demo-up
 
-    make all
+Yamcs: http://localhost:8090
 
-To bring up yamcs container:
+Generated images: http://localhost:8091
 
-    make yamcs-up
+Stop everything:
 
-To bring down yamcs container:
-
-    make yamcs-down
-
-To run simulator by connecting to container:
-
-    make yamcs-simulator
-
-To shell into yamcs container:
-
-    make yamcs-shell
+    make demo-down
