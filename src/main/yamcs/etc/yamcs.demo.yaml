@@ -32,7 +32,7 @@ dataLinks:
     class: org.yamcs.tctm.UdpTcDataLink
     stream: tc_realtime
     host: ${env.YAMCS_TC_HOST:localhost}
-    port: 10025
+    port: ${env.YAMCS_TC_PORT:10025}
     commandPostprocessorClassName: com.example.myproject.MyCommandPostprocessor
 
 mdb:

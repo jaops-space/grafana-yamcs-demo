@@ -192,7 +192,10 @@ def send_tm(simulator):
             f.seek(-6, io.SEEK_CUR)
             f.readinto(packet)
 
-            tm_socket.sendto(packet, (TM_SEND_ADDRESS, TM_SEND_PORT))
+            try_yamcs_write(
+                'telemetry packet',
+                lambda: tm_socket.sendto(packet, (TM_SEND_ADDRESS, TM_SEND_PORT)),
+            )
             simulator.tm_counter += 1
 
             sleep(1 / simulator.rate)

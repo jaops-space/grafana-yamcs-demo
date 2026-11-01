@@ -74,7 +74,7 @@ Start the simulator:
 
 The simulator sends packets at 1 Hz over UDP to Yamcs. There is enough test data to run for a full calendar day.
 
-This project defines example CCSDS telecommands. They are sent to UDP port 10025. The simulator listens to this port and counts received commands.
+This project defines example CCSDS telecommands. They are sent to UDP port 10025 by default. Set `YAMCS_TC_HOST` and `YAMCS_TC_PORT` on Yamcs to route commands through a different host or published port; this does not change the simulator's listening port. The simulator counts received commands.
 
 
 ## Bundling
